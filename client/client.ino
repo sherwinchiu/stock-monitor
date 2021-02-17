@@ -11,13 +11,16 @@ void setup() {
     
 void loop() {
     lcd.setCursor(0, 0);
+    getPrice();
+    printGME();
+    
+}
+void getPrice(){
     if (Serial.available()>3){
       price = Serial.read();
       priceDecimal = Serial.read();
       price += priceDecimal/100.0;
     }
-    printGME();
-    
 }
 void printGME(){
     lcd.setCursor(0,0);

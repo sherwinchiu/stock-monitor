@@ -13,6 +13,7 @@ const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 
 double price;
 int priceDecimal;
+byte count = 1;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 void setup() {
     Serial.begin(9600);  
@@ -25,12 +26,28 @@ void setup() {
 void loop() {
     lcd.setCursor(0, 0);
     if (digitalRead(inPin1)){
+        count++;
+        if(count == 10)
+            count =1;
         Serial.write('N');
     } else if (digitalRead(inPin2)){
+        count--;
+        if (count == 0)
+            count = 9;
         Serial.write('B');
     }
     getPrice();
-    printGME();
+    switch(count){
+        case 1: printGME();
+        case 2: printAMC();
+        case 3: printBBBY();
+        case 4: printNOK();
+        case 5: printBB();
+        case 6: printTSLA();
+        case 7: printAAPL();
+        case 8: printDIS();
+        case 9: printNVDA();
+    }
 }
 void getPrice(){
     if (Serial.available()>3){
@@ -47,4 +64,28 @@ void printGME(){
     lcd.print(" ");
     delay(100);
     lcd.clear();
+}
+void printAMC(){
+    
+}
+void printBBBY(){
+    
+}
+void printNOK(){
+    
+}
+void printBB(){
+    
+}
+void printTSLA(){
+    
+}
+void printAAPL(){
+    
+}
+void printDIS(){
+    
+}
+void printNVDA(){
+    
 }

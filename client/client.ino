@@ -50,11 +50,14 @@ void loop() {
     }
 }
 void getPrice(){
-    if (Serial.available()>3){
+    if (Serial.available()>1){
       price = Serial.read();
       priceDecimal = Serial.read();
       price += priceDecimal/100.0;
     }
+}
+int calcChange(){
+    
 }
 void printGME(){
     lcd.setCursor(0,0);

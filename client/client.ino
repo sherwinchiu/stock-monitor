@@ -1,5 +1,5 @@
 #include <LiquidCrystal.h>
-z
+zz
 #define     rs      12
 #define     en      11
 #define     d4      5

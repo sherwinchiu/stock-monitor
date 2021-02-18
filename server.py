@@ -2,17 +2,19 @@ from yahoo_fin import stock_info as si
 import serial
 from time import sleep
 
-def chooseTicker(count):
-    if (ser.in_waiting):
-        print(ser.read())      
-        if (ser.read() == b'\x00'):
+def chooseTicker(c):
+    count = c
+    if (ser.in_waiting):    
+        if (ser.read(1) == b'\x00'):
             count+=1
-            if (count == 9):
+            if (count >= 9):
                 count = 0
-        elif (ser.read() == b'\x01'):
+        elif (ser.read(1) == b'\x01'):
             count-=1
-            if (count == -1):
+            if (count <= -1):
                 count = 8
+            
+    return count
 def getClose():
     for i in range(9):
         closePrice[i] = si.get_quote_table(tickers[i])['Previous Close']
@@ -20,15 +22,14 @@ def getClose():
 ser = serial.Serial('com5', 9600)
 count = 0
 tickers = ["gme", "amc", "bbby", "nok", "bb", 
-           "tsla", "aapl", "dis", "nvda"]
+           "food.to", "aapl", "dis", "nvda"]
 closePrice = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 getClose()
 
 while True:
-    chooseTicker(count)
+    count = chooseTicker(count)
     price = round(si.get_live_price(tickers[count]),2)
     ser.write(int(price).to_bytes(1, 'big'))
     ser.write(int((price%1)*100).to_bytes(1, 'big'))
     ser.write(int(closePrice[count]).to_bytes(1, 'big'))
     ser.write(int((closePrice[count]%1)*100).to_bytes(1, 'big'))
-    sleep(0.1)

@@ -16,7 +16,7 @@ int priceDecimal;
 double closePrice;
 int closeDecimal;
 int count = 0;
-int debounceDelay = 500;
+int debounceDelay = 1000;
 int lastDebounceTime = millis();
 Servo servo1;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
@@ -62,7 +62,7 @@ void chooseTicker(){
     } else if (count == 4){
         standardPrint("BB");
     } else if (count == 5){
-        standardPrint("TSLA");
+        standardPrint("FOOD");
     } else if (count == 6){
         standardPrint("AAPL");
     } else if (count == 7){
@@ -82,7 +82,7 @@ void getPrices(){
       if(calcChange() < 0)
         servo1.write(45);
       else if (calcChange() > 0)
-        servo1.write(-45);
+        servo1.write(180);
     }
     
 }
@@ -95,9 +95,7 @@ double calcChangePercent(){
 void standardPrint(String ticker){
      lcd.setCursor(0,0);
      lcd.print(ticker);
-     lcd.print(" ");
-     lcd.print(calcChange());
-     lcd.print(" ");
+     lcd.print("   ");
      /**
      if(calcChangePercent() < 0){
         lcd.print("-");
@@ -111,6 +109,8 @@ void standardPrint(String ticker){
      lcd.print(calcChangePercent());
      lcd.setCursor(0, 1);
      lcd.print(price);
+     lcd.print("   ");
+     lcd.print(calcChange());
      delay(50);
      lcd.clear();
 }

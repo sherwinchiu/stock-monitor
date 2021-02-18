@@ -8,88 +8,82 @@ zz
 #define     d7      2
 #define     inPin1  6
 #define     inPin2  7
-
-const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+#define     servo   9
 
 double price;
 int priceDecimal;
-byte count = 1;
+double closePrice;
+int closeDecimal;
+byte count = 0;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 void setup() {
     Serial.begin(9600);  
     pinMode(inPin1, INPUT);
     pinMode(inPin2, INPUT);
-    
     lcd.begin(16, 2);
-    lcd.print("hello, world!");
 }
     
 void loop() {
-    lcd.setCursor(0, 0);
+    changeTicker();
+    getPrices(); 
+    chooseTicker();
+}
+void changeTicker(){
     if (digitalRead(inPin1)){
         count++;
-        if(count == 10)
-            count =1;
+        if(count == 9)
+            count =0;
         Serial.write('N');
     } else if (digitalRead(inPin2)){
         count--;
-        if (count == 0)
-            count = 9;
+        if (count == -1)
+            count = 8;
         Serial.write('B');
     }
-    getPrice();
+}
+void chooseTicker(){
     switch(count){
-        case 1: printGME();
-        case 2: printAMC();
-        case 3: printBBBY();
-        case 4: printNOK();
-        case 5: printBB();
-        case 6: printTSLA();
-        case 7: printAAPL();
-        case 8: printDIS();
-        case 9: printNVDA();
+        case 0: standardPrint("GME");
+        case 1: standardPrint("AMC");
+        case 2: standardPrint("BBBY");
+        case 3: standardPrint("NOK");
+        case 4: standardPrint("BB");
+        case 5: standardPrint("TSLA");
+        case 6: standardPrint("AAPL");
+        case 7: standardPrint("DIS");
+        case 8: standardPrint("NVDA");
     }
 }
-void getPrice(){
-    if (Serial.available()>1){
+void getPrices(){
+    if (Serial.available()>3){
       price = Serial.read();
       priceDecimal = Serial.read();
       price += priceDecimal/100.0;
+      closePrice = Serial.read();
+      closeDecimal = Serial.read();
+      closePrice += closeDecimal/100.0;
     }
 }
-int calcChange(){
-    
+double calcChange(){
+    return (price-closePrice);
 }
-void printGME(){
-    lcd.setCursor(0,0);
-    lcd.print("GME ");
-    lcd.setCursor(0,1);
-    lcd.print(price);
-    lcd.print(" ");
-    delay(100);
-    lcd.clear();
+double calcChangePercent(){
+    return ((price/closePrice)-1);
 }
-void printAMC(){
-    
-}
-void printBBBY(){
-    
-}
-void printNOK(){
-    
-}
-void printBB(){
-    
-}
-void printTSLA(){
-    
-}
-void printAAPL(){
-    
-}
-void printDIS(){
-    
-}
-void printNVDA(){
-    
+void standardPrint(String ticker){
+     lcd.setCursor(0,0);
+     lcd.print(ticker);
+     lcd.print(" ");
+     lcd.print(calcChange());
+     lcd.print(" ");
+     if(calcChangePercent() < 0){
+        lcd.print("-");
+     } else{
+        lcd.print("+");
+     }
+     lcd.print(calcChangePercent());
+     lcd.setCursor(0, 1);
+     lcd.print(price);
+     delay(50);
+     lcd.clear();
 }

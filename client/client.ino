@@ -72,11 +72,13 @@ void chooseTicker(){
     }
 }
 void getPrices(){
-    if (Serial.available()>3){
-      price = Serial.read();
+    if (Serial.available()>5){
+      price = Serial.read()<<8;
+      price += Serial.read();
       priceDecimal = Serial.read();
       price += priceDecimal/100.0;
-      closePrice = Serial.read();
+      closePrice = Serial.read()<<8;
+      closePrice += Serial.read();
       closeDecimal = Serial.read();
       closePrice += closeDecimal/100.0;
       if(calcChange() < 0)
@@ -111,6 +113,5 @@ void standardPrint(String ticker){
      lcd.print(price);
      lcd.print("   ");
      lcd.print(calcChange());
-     delay(50);
      lcd.clear();
 }

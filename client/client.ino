@@ -41,11 +41,13 @@ void changeTicker(){
               count =0;
           Serial.write(0);
           lastDebounceTime = millis();
+          delay(500);
       } else if (digitalRead(inPin2)){
           count--;
           if (count <= -1)
               count = 8;
           Serial.write(1);
+          delay(500);  
           lastDebounceTime = millis();
       }
     }
@@ -82,7 +84,7 @@ void getPrices(){
       closeDecimal = Serial.read();
       closePrice += closeDecimal/100.0;
       if(calcChange() < 0)
-        servo1.write(45);
+        servo1.write(60);
       else if (calcChange() > 0)
         servo1.write(180);
     }
@@ -113,5 +115,6 @@ void standardPrint(String ticker){
      lcd.print(price);
      lcd.print("   ");
      lcd.print(calcChange());
-     lcd.clear();
+     delay(25);
+    // lcd.clear();
 }

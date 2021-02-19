@@ -5,11 +5,12 @@ from time import sleep
 def chooseTicker(c):
     count = c
     if (ser.in_waiting):    
-        if (ser.read(1) == b'\x00'):
+        input = ser.read(1)
+        if (input == b'\x00'):
             count+=1
             if (count >= 9):
                 count = 0
-        elif (ser.read(1) == b'\x01'):
+        elif (input == b'\x01'):
             count-=1
             if (count <= -1):
                 count = 8
@@ -33,3 +34,4 @@ while True:
     ser.write(int((price%1)*100).to_bytes(1, 'big'))
     ser.write(int(closePrice[count]).to_bytes(2, 'big'))
     ser.write(int((closePrice[count]%1)*100).to_bytes(1, 'big'))
+

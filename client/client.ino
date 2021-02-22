@@ -29,9 +29,9 @@ void setup() {
 }
     
 void loop() {
-    changeTicker();
-    getPrices(); 
-    chooseTicker();
+    changeTicker();  //Checks if user wants to change the ticker symbol
+    getPrices();     // Gets the price of ticker symbol
+    chooseTicker();  // If user does want to change ticker symbol, update display
 }
 void changeTicker(){
     if(millis() - lastDebounceTime > debounceDelay){
@@ -100,15 +100,6 @@ void standardPrint(String ticker){
      lcd.setCursor(0,0);
      lcd.print(ticker);
      lcd.print("   ");
-     /**
-     if(calcChangePercent() < 0){
-        lcd.print("-");
-     } else if (calcChangePercent() == 0){
-        lcd.print(" ");
-     } else{
-        lcd.print("+");
-     }
-     **/
      lcd.print("%");
      lcd.print(calcChangePercent());
      lcd.setCursor(0, 1);
